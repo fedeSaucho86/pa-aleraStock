@@ -2,6 +2,7 @@ import re
 import sqlite3
 import tkinderservice
 
+
 def conexion():
     con = sqlite3.connect("mibase.db")
     return con
@@ -36,7 +37,8 @@ def crear_tabla():
         cursor.execute(sql)
         con.commit()
 
-def alta(producto='', stock='', preciocosto='', precioventa='', tree=''):
+def alta(producto='', stock='', preciocosto='', precioventa='', tree='', lista_entry =[]):
+    tkinderservice.clear_text(lista_entry)
     con=conexion()
     cursor=con.cursor()
     patron_prod="^[A-Za-záéíóú0-9]*$" #regex Se aceptan numeros y letras, sin caracteres especiales
@@ -50,24 +52,28 @@ def alta(producto='', stock='', preciocosto='', precioventa='', tree=''):
         patron_float_venta="^[0-9]+([.][0-9]+)?$" #regex float
     if stock:
         patron_stock= "^[0-9]*$" #regex numeros
-    
-    if(re.match(patron_prod, producto) and re.match(patron_stock, stock) 
-        and re.match(patron_float_costo, preciocosto) and re.match(patron_float_venta, precioventa)
-        and producto):
-        data = (producto, stock, preciocosto, precioventa)
-        print(data)
-        sql="INSERT INTO productos(producto, stock, preciocosto, precioventa) VALUES(?, ?, ?,?)"
-        cursor.execute(sql, data)
-        con.commit()
-        actualizar_tree(tree)
+    sql_all = f'SELECT * FROM productos  WHERE producto="{producto}"'  
+    datos = cursor.execute(sql_all)
+    if not datos.fetchall():
+        if(re.match(patron_prod, producto) and re.match(patron_stock, stock) 
+            and re.match(patron_float_costo, preciocosto) and re.match(patron_float_venta, precioventa)
+            and producto):
+            data = (producto, stock, preciocosto, precioventa)
+            sql="INSERT INTO productos(producto, stock, preciocosto, precioventa) VALUES(?, ?, ?,?)"
+            cursor.execute(sql, data)
+            con.commit()
+            actualizar_tree(tree)
+        else:
+            tkinderservice.message("Error","Productos: Solo letras y números\nStock: "+
+                                    "Solo números\nPrecio: Usar '.' para decimales")
     else:
-        tkinderservice.message("Error","Productos: Solo letras y números\nStock: "+
-                                "Solo números\nPrecio: Usar '.' para decimales")
+        tkinderservice.message("Error","Producto Ya existente")
         
     
 
 
-def baja(producto="", tree=''):
+def baja(producto="", tree='',lista_entry =[]):
+    tkinderservice.clear_text(lista_entry)
     con=conexion()
     cursor=con.cursor()
     patron_prod="^[A-Za-záéíóú0-9]*$" #regex Se aceptan numeros y letras, sin caracteres especiales
@@ -87,7 +93,8 @@ def baja(producto="", tree=''):
     else:
         tkinderservice.message("Error","Producto inexistente")
 
-def consultar(producto="", tree=''):
+def consultar(producto="", tree='',lista_entry =[]):
+    tkinderservice.clear_text(lista_entry)
     sql_all = f'SELECT * FROM productos  WHERE producto="{producto}"'
     con=conexion()
     cursor=con.cursor()
@@ -98,7 +105,8 @@ def consultar(producto="", tree=''):
         actualizar_tree(tree)
     return datos.fetchall()
 
-def modificar(producto='', stock='', preciocosto='', precioventa='', tree=''):
+def modificar(producto='', stock='', preciocosto='', precioventa='', tree='',lista_entry =[]):
+    tkinderservice.clear_text(lista_entry)
     con=conexion()
     cursor=con.cursor()
     patron_prod="^[A-Za-záéíóú0-9]*$" #regex Se aceptan numeros y letras, sin caracteres especiales
@@ -127,10 +135,8 @@ def modificar(producto='', stock='', preciocosto='', precioventa='', tree=''):
         if(re.match(patron_prod, producto) and re.match(patron_stock, stock) 
         and re.match(patron_float_costo, preciocosto) and re.match(patron_float_venta, precioventa)
         and producto):
-            print(sentence)
             try:
                 sql=f'UPDATE productos SET {sentence} where producto="{producto}";'
-                print(sql)
                 cursor.execute(sql)
                 con.commit()
             except:

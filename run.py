@@ -4,6 +4,7 @@ import sqlite3
 import re
 from tkinter import messagebox as MessageBox
 import dbservice
+import tkinderservice
 
 
 ##############Inicializate DB################################################
@@ -41,25 +42,34 @@ e_producto_id = ttk.Entry(root, textvariable=lab_producto_id, width=15)
 e_stock = ttk.Entry(root, textvariable=lab_stock, width=15)
 e_precio_costo = ttk.Entry(root, textvariable=lab_precio_costo, width=15)
 e_precio_venta = ttk.Entry(root, textvariable=lab_precio_venta, width=15)
+lista_entry= [e_producto_id,e_stock,e_precio_costo,e_precio_venta]
 
 bot_buscar = ttk.Button(root, text='Buscar Producto', command=lambda:dbservice.consultar(
                                                                             e_producto_id.get(),
-                                                                            tree))
+                                                                            tree,
+                                                                            lista_entry))
+
 bot_agregar = ttk.Button(root, text='Agregar Producto', command=lambda:dbservice.alta(
                                                                             e_producto_id.get(),
                                                                             e_stock.get(), 
                                                                             e_precio_costo.get(),
                                                                             e_precio_venta.get(),
-                                                                            tree))
+                                                                            tree,
+                                                                            lista_entry))
+
 bot_modificar = ttk.Button(root, text='Modificar Producto', command=lambda:dbservice.modificar(
                                                                             e_producto_id.get(),
                                                                             e_stock.get(), 
                                                                             e_precio_costo.get(),
                                                                             e_precio_venta.get(),
-                                                                            tree))
+                                                                            tree,
+                                                                            lista_entry))
+
 bot_eliminar = ttk.Button(root, text='Eliminar Producto', command=lambda:dbservice.baja(
                                                                             e_producto_id.get(),
-                                                                            tree))
+                                                                            tree,
+                                                                            lista_entry))
+
 bot_salir = ttk.Button(root, text='Salir', command=root.quit)
 
 tree = ttk.Treeview(root)
@@ -86,5 +96,7 @@ bot_modificar.grid(column=1, row=4)
 bot_eliminar.grid(column=1, row=5)
 tree.grid(column=2, row=2, columnspan=4, rowspan=4)
 bot_salir.grid(column=6, row=6)
+
+print(bot_agregar)
 
 mainloop()
