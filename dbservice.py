@@ -18,8 +18,6 @@ def actualizar_tree(tree, product = ""):
         tkinderservice.actualizar_treeview(tree, resultado)
         
             
-
-
 def crear_tabla():
     con = conexion()
     cursor = con.cursor()

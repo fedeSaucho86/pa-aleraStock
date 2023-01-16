@@ -1,13 +1,9 @@
 from tkinter import *
 from tkinter import ttk
-import sqlite3
-import re
-from tkinter import messagebox as MessageBox
+import utils
 import dbservice
-import tkinderservice
 
-
-##############Inicializate DB################################################
+##############Inicialización DB################################################
 try:
     con = dbservice.conexion()
     dbservice.crear_tabla()
@@ -15,7 +11,7 @@ except Exception as e:
     print("No se ha podido crear la tabla: ", e)
 
 
-###############Creation TKINDER#######################################################
+###############Creación TKINDER#######################################################
 root = Tk()
 
 #Definición de variables
@@ -32,16 +28,25 @@ root.title('Control Stock Pañalera')
 imagen = PhotoImage(file = "background.png")
 background = Label(root, image = imagen).place(x=0,y=0)
 
-# Creo las etiquetas y los botones
-lab_producto_id = ttk.Label(root, text="Producto")
-lab_stock = ttk.Label(root, text="Stock")
-lab_precio_costo = ttk.Label(root, text="Costo")
-lab_precio_venta = ttk.Label(root, text="Precio")
+#Creo Menu bar
+menubar = Menu(root)
+root.config(menu=menubar)
+filemenu = Menu(menubar, tearoff=0)
+menubar.add_cascade(label="Archivo", menu=filemenu)
+filemenu.add_command(label="Exportar a csv", command=lambda:utils.savedbtocsv())
+filemenu.add_separator()
+filemenu.add_command(label="Salir", command=root.quit)
 
-e_producto_id = ttk.Entry(root, textvariable=lab_producto_id, width=15)
-e_stock = ttk.Entry(root, textvariable=lab_stock, width=15)
-e_precio_costo = ttk.Entry(root, textvariable=lab_precio_costo, width=15)
-e_precio_venta = ttk.Entry(root, textvariable=lab_precio_venta, width=15)
+# Creo las etiquetas y los botones
+lab_producto_id = ttk.Label(root, text="Producto", background="pink")
+lab_stock = ttk.Label(root, text="Stock(u)", background="pink")
+lab_precio_costo = ttk.Label(root, text="Costo($)", background="pink")
+lab_precio_venta = ttk.Label(root, text="Precio($)", background="pink")
+
+e_producto_id = ttk.Entry(root, textvariable=lab_producto_id, width=21)
+e_stock = ttk.Entry(root, textvariable=lab_stock, width=13)
+e_precio_costo = ttk.Entry(root, textvariable=lab_precio_costo, width=13)
+e_precio_venta = ttk.Entry(root, textvariable=lab_precio_venta, width=13)
 lista_entry= [e_producto_id,e_stock,e_precio_costo,e_precio_venta]
 
 bot_buscar = ttk.Button(root, text='Buscar Producto', command=lambda:dbservice.consultar(
@@ -72,13 +77,16 @@ bot_eliminar = ttk.Button(root, text='Eliminar Producto', command=lambda:dbservi
 
 bot_salir = ttk.Button(root, text='Salir', command=root.quit)
 
-tree = ttk.Treeview(root)
-tree["columns"] = ("col1", "col2", "col3","col4")
-tree.column("#0", width=50, minwidth=50, anchor=W)
-tree.column("col1", width=80, minwidth=80)
-tree.column("col2", width=80, minwidth=80)
-tree.column("col3", width=80, minwidth=80)
-tree.column("col4", width=80, minwidth=80)
+columns = ('product', 'stock', 'costo', 'precio venta')
+tree = ttk.Treeview(root, columns=columns, show='headings')
+
+tree.column("product", width=130, minwidth=130,anchor=CENTER)
+tree.column("stock", width=85, minwidth=85,anchor=CENTER)
+tree.column("costo", width=85, minwidth=85,anchor=CENTER)
+tree.column("precio venta", width=85, minwidth=85,anchor=CENTER)
+
+
+
 
 lab_producto_id.grid(column=2, row=0)
 lab_stock.grid(column=3, row=0)
@@ -97,6 +105,5 @@ bot_eliminar.grid(column=1, row=5)
 tree.grid(column=2, row=2, columnspan=4, rowspan=4)
 bot_salir.grid(column=6, row=6)
 
-print(bot_agregar)
 
 mainloop()
