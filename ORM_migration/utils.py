@@ -10,11 +10,9 @@ class Utils():
           self.model = Modelo()
      
      def savedbtocsv(self, ):
-          con = self.model.conexion()
-          c=con.cursor()
-          mysel=c.execute("select * from productos ")
+          sql_query = self.model.consultar()
           with open(f"export_{timestr}.csv", "w", newline='') as myfile:
                csvwriter = csv.writer(myfile, delimiter=',')
-               for row in mysel:
+               for row in sql_query.tuples():
                    csvwriter.writerow(row)
 

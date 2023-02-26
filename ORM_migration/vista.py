@@ -9,7 +9,7 @@ from tkinter import CENTER
 from tkinter import END
 from tkinter import PhotoImage
 from tkinter import messagebox as MessageBox
-from modelo import Modelo
+from model1 import Modelo
 from utils import Utils
 
 class Vista():
@@ -30,24 +30,20 @@ class Vista():
             entry.delete(0, END)
 
     def actualizar_treeview(self, mitreview, product = ""):
-        sql_all = "SELECT * FROM productos ORDER BY id ASC"
-        if product:
-            sql_all = f'SELECT * FROM productos  WHERE producto="{product}"'   
-        con=self.model.conexion()
-        cursor=con.cursor()
-        datos=cursor.execute(sql_all)
-        resultado = datos.fetchall()
+        sql_query = self.model.consultar(product)  
+        if not sql_query:
+            self.message("Error","No existe el Producto")
         records = mitreview.get_children()
         for element in records:
             mitreview.delete(element)
         mitreview.tag_configure('grey', background='lightgrey')
         mitreview.tag_configure('white', background='white')
-        for i, fila in enumerate(resultado):
+        for i, fila in enumerate(sql_query):
             if i % 2 == 0:
                 my_tag = 'grey' 
             else:
                 my_tag = 'white'
-            mitreview.insert("", 0, values=(fila[1], fila[2], fila[3], fila[4]), tags =(my_tag))
+            mitreview.insert("", 0, values=(fila.producto, fila.stock, fila.preciocosto, fila.precioventa), tags =(my_tag))
 
 
     def modificar_producto(self, productid, stock, costo, precio, tree, lista_entry):
@@ -71,7 +67,7 @@ class Vista():
         self.clear_text(lista_entry)
         msg, frase = self.model.baja(productid)
         if msg == "Error":
-            message(msg, frase)
+            self.message(msg, frase)
 
         if msg == "Delete Item":
             message = self.ask(msg, frase)
@@ -82,11 +78,7 @@ class Vista():
 
     def consultar_producto(self, productid, tree, lista_entry):
         self.clear_text(lista_entry)
-        consulta = self.model.consultar(productid)
-        if consulta == "IS":
-            self.actualizar_treeview(tree, productid)
-        else:
-            self.actualizar_treeview(tree)
+        self.actualizar_treeview(tree, productid)
 
 
     def vista_principal(self, root):
@@ -131,12 +123,12 @@ class Vista():
         e_precio_venta = ttk.Entry(root, textvariable=lab_precio_venta, width=13)
         lista_entry= [e_producto_id,e_stock,e_precio_costo,e_precio_venta]
 
-        """
+  
         bot_buscar = ttk.Button(root, text='Buscar Producto', command=lambda:self.consultar_producto(
                                                                                     e_producto_id.get(),
                                                                                     tree,
-                                                                                    lista_entry))
-
+                                                                                   lista_entry))
+        
         bot_agregar = ttk.Button(root, text='Agregar Producto', command=lambda:self.alta_producto(
                                                                                     e_producto_id.get(),
                                                                                     e_stock.get(), 
@@ -144,7 +136,6 @@ class Vista():
                                                                                     e_precio_venta.get(),
                                                                                     tree,
                                                                                     lista_entry))
-
         bot_modificar = ttk.Button(root, text='Modificar Producto', command=lambda:self.modificar_producto(
                                                                                     e_producto_id.get(),
                                                                                     e_stock.get(), 
@@ -152,12 +143,11 @@ class Vista():
                                                                                     e_precio_venta.get(),
                                                                                     tree,
                                                                                     lista_entry))
-
         bot_eliminar = ttk.Button(root, text='Eliminar Producto', command=lambda:self.baja_producto(
                                                                                     e_producto_id.get(),
                                                                                     tree,
                                                                                     lista_entry))
-        """
+        
 
         bot_salir = ttk.Button(root, text='Salir', command=root.quit)
 
@@ -178,11 +168,11 @@ class Vista():
         e_precio_costo.grid(column=4, row=1)
         e_precio_venta.grid(column=5, row=1)
 
-        """
         bot_buscar.grid(column=1, row=2)  
         bot_agregar.grid(column=1, row=3)
-        bot_modificar.grid(column=1, row=4)
-        bot_eliminar.grid(column=1, row=5)
         tree.grid(column=2, row=2, columnspan=4, rowspan=4)
         bot_salir.grid(column=6, row=6)
-        """
+        bot_eliminar.grid(column=1, row=5)
+        bot_modificar.grid(column=1, row=4)
+
+

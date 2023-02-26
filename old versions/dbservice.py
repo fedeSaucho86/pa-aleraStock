@@ -85,7 +85,8 @@ def baja(producto="", tree='',lista_entry =[]):
                 data = (producto,) 
                 cursor.execute(sql, data )
                 con.commit()
-                actualizar_tree(tree)        
+                actualizar_tree(tree) 
+                   
         else:
             tkinderservice.message("Error","Productos: Solo letras y números en campo Producto\nCampo Producto obligatorio")
     else:

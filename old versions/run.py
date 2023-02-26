@@ -79,7 +79,6 @@ bot_salir = ttk.Button(root, text='Salir', command=root.quit)
 
 columns = ('product', 'stock', 'costo', 'precio venta')
 tree = ttk.Treeview(root, columns=columns, show='headings')
-
 tree.column("product", width=130, minwidth=130,anchor=CENTER)
 tree.column("stock", width=85, minwidth=85,anchor=CENTER)
 tree.column("costo", width=85, minwidth=85,anchor=CENTER)
