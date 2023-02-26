@@ -11,6 +11,8 @@ from tkinter import PhotoImage
 from tkinter import messagebox as MessageBox
 from model1 import Modelo
 from utils import Utils
+from loggerService import loggerService 
+from error_register import error_reg
 
 class Vista():
     
@@ -93,21 +95,27 @@ class Vista():
         root.title('Control Stock Pañalera')
 
         #Seteo imagen de fondo
-        image1 = Image.open("background.png")
-        test = ImageTk.PhotoImage(image1)
-        label1 = Label(image=test)
-        label1.image = test
-        label1.place(x=0, y=0)
-
-        #imagen = PhotoImage(file = "background.png")
-        #background = Label(root, image = imagen).place(x=0,y=0)
-
+        try:
+            image1 = Image.open("background.png")
+            test = ImageTk.PhotoImage(image1)
+            label1 = Label(image=test)
+            label1.image = test
+            label1.place(x=0, y=0)
+        except Exception as e:
+            error_reg.registrar_error(e)
+            loggerService.error(e)
+            
 
         menubar = Menu(root)
         root.config(menu=menubar)
         filemenu = Menu(menubar, tearoff=0)
-        menubar.add_cascade(label="Archivo", menu=filemenu)
-        filemenu.add_command(label="Exportar a csv", command=lambda:utils.savedbtocsv())
+        try:
+            menubar.add_cascade(label="Archivo", menu=filemenu)
+            filemenu.add_command(label="Exportar a csv", command=lambda:utils.savedbtocsv())
+        except Exception as e:
+            self.error.registrar_error(e)
+            error_reg.registrar_error(e)
+
         filemenu.add_separator()
         filemenu.add_command(label="Salir", command=root.quit)
 

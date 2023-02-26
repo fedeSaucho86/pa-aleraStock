@@ -1,8 +1,15 @@
 import sqlite3
 from peewee import *
 import re
+from loggerService import loggerService 
+from error_register import error_reg
 
-db = SqliteDatabase("mibase.db")
+try:
+    db = SqliteDatabase("mibase.db")
+except Exception as e:
+    error_reg.registrar_error(e)
+    loggerService.error(e)
+
 
 
 class BaseModel(Model):
