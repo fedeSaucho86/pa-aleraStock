@@ -1,5 +1,5 @@
-from tkinter import Tk
 from vista import Vista 
+from tkinter import Tk
 from model1 import Modelo
 from loggerService import loggerService 
 from error_register import ErrorRegister

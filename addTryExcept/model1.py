@@ -1,5 +1,6 @@
 import sqlite3
 from peewee import *
+from peewee import Model, AutoField, CharField, IntegerField, FloatField
 import re
 from loggerService import loggerService 
 from error_register import error_reg

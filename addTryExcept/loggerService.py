@@ -16,6 +16,11 @@ class LoggerService:
         self.logger.addHandler(handler)
 
     def error(self, message):
+        """_summary_
+
+        Args:
+            message (_type_): _description_
+        """
         self.logger.error(message)
 
     def info(self, message):

@@ -1,5 +1,5 @@
-from PIL import ImageTk, Image
 from tkinter import StringVar  
+from PIL import ImageTk, Image
 from tkinter import DoubleVar 
 from tkinter import IntVar
 from tkinter import Label

@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>model1 &mdash; PañaleraStock 0.0.1 documentation</title>
+      <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            PañaleraStock
+          </a>
+              <div class="version">
+                0.0.1
+              </div>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../controlador.html">controlador module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../error_register.html">error_register module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../loggerService.html">loggerService module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../model1.html">model1 module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../utils.html">utils module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../vista.html">vista module</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">PañaleraStock</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">Module code</a></li>
+      <li class="breadcrumb-item active">model1</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for model1</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">sqlite3</span>
+<span class="kn">from</span> <span class="nn">peewee</span> <span class="kn">import</span> <span class="o">*</span>
+<span class="kn">from</span> <span class="nn">peewee</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">db</span><span class="p">,</span> <span class="n">AutoField</span><span class="p">,</span> <span class="n">CharField</span><span class="p">,</span> <span class="n">IntegerField</span><span class="p">,</span> <span class="n">FloatField</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">loggerService</span> <span class="kn">import</span> <span class="n">loggerService</span> 
+<span class="kn">from</span> <span class="nn">error_register</span> <span class="kn">import</span> <span class="n">error_reg</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="n">db</span> <span class="o">=</span> <span class="n">SqliteDatabase</span><span class="p">(</span><span class="s2">&quot;mibase.db&quot;</span><span class="p">)</span>
+<span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">e</span><span class="p">:</span>
+    <span class="n">error_reg</span><span class="o">.</span><span class="n">registrar_error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+    <span class="n">loggerService</span><span class="o">.</span><span class="n">error</span><span class="p">(</span><span class="n">e</span><span class="p">)</span>
+
+
+
+<div class="viewcode-block" id="BaseModel"><a class="viewcode-back" href="../model1.html#model1.BaseModel">[docs]</a><span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">Model</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseModel.Meta"><a class="viewcode-back" href="../model1.html#model1.BaseModel.Meta">[docs]</a>    <span class="k">class</span> <span class="nc">Meta</span><span class="p">:</span>
+        <span class="n">database</span> <span class="o">=</span> <span class="n">db</span></div></div>
+
+<div class="viewcode-block" id="Inventory"><a class="viewcode-back" href="../model1.html#model1.Inventory">[docs]</a><span class="k">class</span> <span class="nc">Inventory</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="nb">id</span> <span class="o">=</span> <span class="n">AutoField</span><span class="p">()</span>
+    <span class="n">producto</span> <span class="o">=</span>  <span class="n">CharField</span><span class="p">(</span><span class="n">unique</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">stock</span> <span class="o">=</span> <span class="n">IntegerField</span><span class="p">()</span>
+    <span class="n">preciocosto</span> <span class="o">=</span> <span class="n">FloatField</span><span class="p">()</span>
+    <span class="n">precioventa</span> <span class="o">=</span> <span class="n">FloatField</span><span class="p">()</span></div>
+
+    
+<span class="n">db</span><span class="o">.</span><span class="n">connect</span><span class="p">()</span>
+<span class="n">db</span><span class="o">.</span><span class="n">create_tables</span><span class="p">([</span><span class="n">Inventory</span><span class="p">])</span>    
+    
+<div class="viewcode-block" id="Modelo"><a class="viewcode-back" href="../model1.html#model1.Modelo">[docs]</a><span class="k">class</span> <span class="nc">Modelo</span><span class="p">():</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="Modelo.alta"><a class="viewcode-back" href="../model1.html#model1.Modelo.alta">[docs]</a>    <span class="k">def</span> <span class="nf">alta</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producto</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">stock</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">preciocosto</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">precioventa</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="n">inventory</span> <span class="o">=</span> <span class="n">Inventory</span><span class="p">()</span>
+        <span class="n">patron_prod</span><span class="o">=</span><span class="s2">&quot;^[A-Za-záéíóú0-9]*$&quot;</span> <span class="c1">#regex Se aceptan numeros y letras, sin caracteres especiales</span>
+        <span class="n">patron_stock</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="n">patron_float_costo</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="n">patron_float_venta</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">preciocosto</span><span class="p">:</span>
+            <span class="n">patron_float_costo</span><span class="o">=</span><span class="s2">&quot;^[0-9]+([.][0-9]+)?$&quot;</span> <span class="c1">#regex float</span>
+        <span class="k">if</span> <span class="n">precioventa</span><span class="p">:</span>
+            <span class="n">patron_float_venta</span><span class="o">=</span><span class="s2">&quot;^[0-9]+([.][0-9]+)?$&quot;</span> <span class="c1">#regex float</span>
+        <span class="k">if</span> <span class="n">stock</span><span class="p">:</span>
+            <span class="n">patron_stock</span><span class="o">=</span> <span class="s2">&quot;^[0-9]*$&quot;</span> <span class="c1">#regex numeros</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">Inventory</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">producto</span> <span class="o">==</span> <span class="n">producto</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">patron_prod</span><span class="p">,</span> <span class="n">producto</span><span class="p">)</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">patron_stock</span><span class="p">,</span> <span class="n">stock</span><span class="p">)</span> 
+                <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">patron_float_costo</span><span class="p">,</span> <span class="n">preciocosto</span><span class="p">)</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">patron_float_venta</span><span class="p">,</span> <span class="n">precioventa</span><span class="p">)</span>
+                <span class="ow">and</span> <span class="n">producto</span><span class="p">):</span>
+                <span class="n">inventory</span><span class="o">.</span><span class="n">producto</span> <span class="o">=</span> <span class="n">producto</span>
+                <span class="n">inventory</span><span class="o">.</span><span class="n">stock</span> <span class="o">=</span> <span class="n">stock</span>
+                <span class="n">inventory</span><span class="o">.</span><span class="n">preciocosto</span> <span class="o">=</span> <span class="n">preciocosto</span>
+                <span class="n">inventory</span><span class="o">.</span><span class="n">precioventa</span> <span class="o">=</span> <span class="n">precioventa</span>
+                <span class="n">inventory</span><span class="o">.</span><span class="n">save</span><span class="p">()</span>
+
+                <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;Error&quot;</span><span class="p">,</span><span class="s2">&quot;Productos: Solo letras y números</span><span class="se">\n</span><span class="s2">Stock: &quot;</span> \
+                                        <span class="s2">&quot;Solo números</span><span class="se">\n</span><span class="s2">Precio: Usar &#39;.&#39; para decimales&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Error&quot;</span><span class="p">,</span><span class="s2">&quot;Producto Ya existente&quot;</span></div>
+
+     
+<div class="viewcode-block" id="Modelo.consultar"><a class="viewcode-back" href="../model1.html#model1.Modelo.consultar">[docs]</a>    <span class="k">def</span> <span class="nf">consultar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producto</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">producto</span><span class="p">:</span>
+            <span class="n">query</span> <span class="o">=</span> <span class="n">Inventory</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">producto</span> <span class="o">==</span> <span class="n">producto</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">query</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">Inventory</span><span class="o">.</span><span class="n">select</span><span class="p">()</span></div>
+    
+<div class="viewcode-block" id="Modelo.baja"><a class="viewcode-back" href="../model1.html#model1.Modelo.baja">[docs]</a>    <span class="k">def</span> <span class="nf">baja</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producto</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+        <span class="n">patron_prod</span><span class="o">=</span><span class="s2">&quot;^[A-Za-záéíóú0-9]*$&quot;</span> <span class="c1">#regex Se aceptan numeros y letras, sin caracteres especiales</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">Inventory</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">producto</span> <span class="o">==</span> <span class="n">producto</span><span class="p">)</span>  
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+            <span class="k">if</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">patron_prod</span><span class="p">,</span> <span class="n">producto</span><span class="p">)</span> <span class="ow">and</span> <span class="n">producto</span><span class="p">):</span>
+                <span class="k">return</span> <span class="s1">&#39;Delete Item&#39;</span><span class="p">,</span> <span class="sa">f</span><span class="s1">&#39;Are you sure you want to delete </span><span class="si">{</span><span class="n">producto</span><span class="si">}</span><span class="s1"> product?&#39;</span>                  
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;Error&quot;</span><span class="p">,</span><span class="s2">&quot;Productos: Solo letras y números en campo Producto</span><span class="se">\n</span><span class="s2">Campo Producto obligatorio&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Error&quot;</span><span class="p">,</span><span class="s2">&quot;Producto inexistente&quot;</span></div>
+
+<div class="viewcode-block" id="Modelo.borrar_sql"><a class="viewcode-back" href="../model1.html#model1.Modelo.borrar_sql">[docs]</a>    <span class="k">def</span> <span class="nf">borrar_sql</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producto</span><span class="p">):</span>       
+        <span class="c1">#sql=&quot;DELETE FROM productos WHERE producto = ?; &quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">Inventory</span><span class="o">.</span><span class="n">delete</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">producto</span> <span class="o">==</span> <span class="n">producto</span><span class="p">)</span>
+        <span class="n">query</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+        <span class="k">pass</span></div>
+        
+
+<div class="viewcode-block" id="Modelo.modificar"><a class="viewcode-back" href="../model1.html#model1.Modelo.modificar">[docs]</a>    <span class="k">def</span> <span class="nf">modificar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">producto</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">stock</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">preciocosto</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">,</span> <span class="n">precioventa</span><span class="o">=</span><span class="s1">&#39;&#39;</span><span class="p">):</span>
+        <span class="n">patron_prod</span><span class="o">=</span><span class="s2">&quot;^[A-Za-záéíóú0-9]*$&quot;</span> <span class="c1">#regex Se aceptan numeros y letras, sin caracteres especiales</span>
+        <span class="n">patron_stock</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="n">patron_float_costo</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="n">patron_float_venta</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+        <span class="n">query</span> <span class="o">=</span> <span class="n">Inventory</span><span class="o">.</span><span class="n">select</span><span class="p">()</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">producto</span> <span class="o">==</span> <span class="n">producto</span><span class="p">)</span> 
+        <span class="k">for</span> <span class="n">valor</span> <span class="ow">in</span> <span class="n">query</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">preciocosto</span><span class="p">:</span>
+                <span class="n">preciocosto</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">valor</span><span class="o">.</span><span class="n">preciocosto</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">patron_float_costo</span><span class="o">=</span><span class="s2">&quot;^[0-9]+([.][0-9]+)?$&quot;</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">precioventa</span><span class="p">:</span>
+                <span class="n">precioventa</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">valor</span><span class="o">.</span><span class="n">precioventa</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">patron_float_venta</span><span class="o">=</span><span class="s2">&quot;^[0-9]+([.][0-9]+)?$&quot;</span> 
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">stock</span><span class="p">:</span>
+                <span class="n">stock</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">valor</span><span class="o">.</span><span class="n">stock</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">patron_stock</span><span class="o">=</span> <span class="s2">&quot;^[0-9]*$&quot;</span>      
+
+        <span class="k">if</span> <span class="n">producto</span><span class="p">:</span>  
+            <span class="k">if</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">patron_prod</span><span class="p">,</span> <span class="n">producto</span><span class="p">)</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">patron_stock</span><span class="p">,</span> <span class="n">stock</span><span class="p">)</span> 
+            <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">patron_float_costo</span><span class="p">,</span> <span class="n">preciocosto</span><span class="p">)</span> <span class="ow">and</span> <span class="n">re</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">patron_float_venta</span><span class="p">,</span> <span class="n">precioventa</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">producto</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">query</span><span class="p">):</span>
+                    <span class="n">actualizar</span><span class="o">=</span><span class="n">Inventory</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">producto</span> <span class="o">=</span> <span class="n">producto</span><span class="p">,</span> <span class="n">stock</span> <span class="o">=</span> <span class="n">stock</span><span class="p">,</span> <span class="n">precioventa</span> <span class="o">=</span> <span class="n">precioventa</span><span class="p">,</span> <span class="n">preciocosto</span> <span class="o">=</span> <span class="n">preciocosto</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Inventory</span><span class="o">.</span><span class="n">producto</span> <span class="o">==</span> <span class="n">producto</span><span class="p">)</span>
+                    <span class="n">actualizar</span><span class="o">.</span><span class="n">execute</span><span class="p">()</span>
+                    <span class="k">return</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="s2">&quot;Producto inexistente&quot;</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">return</span> <span class="s2">&quot;Error&quot;</span><span class="p">,</span> <span class="s2">&quot;Productos: Solo letras y números</span><span class="se">\n</span><span class="s2">Stock: &quot;</span> \
+                                <span class="s2">&quot;Solo números</span><span class="se">\n</span><span class="s2">Precio: Usar &#39;.&#39; para decimales</span><span class="se">\n</span><span class="s2">Campo Producto obligatorio&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="s2">&quot;Error&quot;</span><span class="p">,</span><span class="s2">&quot;Por favor indicar que producto quiere modificar&quot;</span></div></div>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, Fede.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
