@@ -1,16 +1,14 @@
-import sqlite3
-from peewee import *
-from peewee import Model, AutoField, CharField, IntegerField, FloatField
+from peewee import Model, AutoField, CharField, IntegerField, FloatField, SqliteDatabase, db
 import re
 from loggerService import loggerService 
 from error_register import error_reg
+from typing import Tuple, Any
 
 try:
     db = SqliteDatabase("mibase.db")
 except Exception as e:
     error_reg.registrar_error(e)
     loggerService.error(e)
-
 
 
 class BaseModel(Model):
@@ -33,7 +31,19 @@ class Modelo():
         pass
 
 
-    def alta(self, producto='', stock='', preciocosto='', precioventa=''):
+    def alta(self, producto:str='', stock:int = '', preciocosto:float = '', precioventa:float = '') -> Tuple[str,str]:
+        """
+        Register new product to inventory
+
+        Args:
+            producto (str, optional): Product id
+            stock (str, optional): Current stock
+            preciocosto (str, optional): Cost price
+            precioventa (str, optional): Sell price
+
+        Returns:
+            Tuple[str,str]: Differents messages depending on choosen option
+        """
         inventory = Inventory()
         patron_prod="^[A-Za-záéíóú0-9]*$" #regex Se aceptan numeros y letras, sin caracteres especiales
         patron_stock=""
@@ -64,14 +74,32 @@ class Modelo():
             return "Error","Producto Ya existente"
 
      
-    def consultar(self, producto=""):
+    def consultar(self, producto:str = "")  -> Any :
+        """
+        Query to database to show it in Treeview App
+
+        Args:
+            producto (str, optional): Product Id
+
+        Returns:
+            Any: Return Query object -> All products or specific One
+        """
         if producto:
             query = Inventory.select().where(Inventory.producto == producto)
             return query
         else:
             return Inventory.select()
     
-    def baja(self, producto=""):
+    def baja(self, producto:str = "") -> Tuple[str,str]:
+        """
+        If product is not null and match with patterns, will be deleted in other method.
+
+        Args:
+            producto (str, optional): Product Id
+
+        Returns:
+            Tuple[str,str]: Differents messages depending on choosen option
+        """
         patron_prod="^[A-Za-záéíóú0-9]*$" #regex Se aceptan numeros y letras, sin caracteres especiales
         query = Inventory.select().where(Inventory.producto == producto)  
         if len(query):
@@ -82,14 +110,32 @@ class Modelo():
         else:
             return "Error","Producto inexistente"
 
-    def borrar_sql(self, producto):       
+    def borrar_sql(self, producto:str = "") -> None:
+        """
+        To delete entries in DB after previous validations
+
+        Args:
+            producto (str, optional): Product Id
+        """
         #sql="DELETE FROM productos WHERE producto = ?; "
         query = Inventory.delete().where(Inventory.producto == producto)
         query.execute()
         pass
         
 
-    def modificar(self, producto='', stock='', preciocosto='', precioventa=''):
+    def modificar(self, producto:str='', stock:int = '', preciocosto:float = '', precioventa:float = '') -> Tuple[str,str]:
+        """
+        Modify Product/entries in Database
+
+        Args:
+            producto (str, optional): Product id
+            stock (str, optional): Current stock
+            preciocosto (str, optional): Cost price
+            precioventa (str, optional): Sell price
+
+        Returns:
+            Tuple[str,str]: Differents messages depending on choosen option
+        """
         patron_prod="^[A-Za-záéíóú0-9]*$" #regex Se aceptan numeros y letras, sin caracteres especiales
         patron_stock=""
         patron_float_costo=""

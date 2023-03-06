@@ -13,7 +13,7 @@ Welcome to PañaleraStock's documentation!
    controlador
    error_register
    loggerService
-   model1
+   model
    utils
    vista
 

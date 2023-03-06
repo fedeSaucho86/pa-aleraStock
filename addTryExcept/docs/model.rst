@@ -1,7 +1,7 @@
-model1 module
+model module
 =============
 
-.. automodule:: model1
+.. automodule:: model
    :members:
    :undoc-members:
    :show-inheritance:

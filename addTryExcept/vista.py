@@ -7,31 +7,63 @@ from tkinter import ttk
 from tkinter import Menu
 from tkinter import CENTER
 from tkinter import END
-from tkinter import PhotoImage
 from tkinter import messagebox as MessageBox
-from model1 import Modelo
+from model import Modelo
 from utils import Utils
 from loggerService import loggerService 
 from error_register import error_reg
+from typing import Type, Any
 
 class Vista():
     
-    def __init__(self, root=None):
-        self.root = root
+    def __init__(self, root:Type[Any] = None) -> None:
+        """
+        Receive Tk() object and create app view
+
+        Args:
+            root (Type[Any], optional): Tk() object
+        """
         self.model = Modelo()
         self.vista_principal(root)
         
-    def message(self, msg, frase = ""):
+    def message(self, msg:str = "", frase:str = "") -> None:
+        """
+        Generate info message in app view
+
+        Args:
+            msg (str, optional): message warning
+            frase (str, optional): question itself
+        """
         MessageBox.showinfo(msg, frase)
 
-    def ask(self, msg, frase = ""):
+    def ask(self, msg:str = "", frase:str = "") -> None:
+        """
+        Generate ask message in app view
+
+        Args:
+            msg (str, optional): message question
+            frase (str, optional): question itself
+        """
         return MessageBox.askquestion(msg, frase, icon='warning')
 
-    def clear_text (self, lista_entry):
+    def clear_text (self, lista_entry:list = []) -> None:
+        """
+        Clear treeview after change
+
+        Args:
+            lista_entry (list, optional): list with entries
+        """
         for entry in lista_entry:
             entry.delete(0, END)
 
-    def actualizar_treeview(self, mitreview, product = ""):
+    def actualizar_treeview(self, mitreview:Any, product:str = "") -> None:
+        """
+        Show in screen required information
+
+        Args:
+            mitreview (Any): Treeview object
+            product (str, optional): Product Id
+        """
         sql_query = self.model.consultar(product)  
         if not sql_query:
             self.message("Error","No existe el Producto")
@@ -48,7 +80,18 @@ class Vista():
             mitreview.insert("", 0, values=(fila.producto, fila.stock, fila.preciocosto, fila.precioventa), tags =(my_tag))
 
 
-    def modificar_producto(self, productid, stock, costo, precio, tree, lista_entry):
+    def modificar_producto(self, productid:str, stock:int, costo:float, precio:float, tree:Any, lista_entry:list) -> None:
+        """
+        Clear Screen, call modificar method of Model and show a message or update treeview depending of the case
+
+        Args:
+            producto (str, optional): Product id
+            stock (str, optional): Current stock
+            preciocosto (str, optional): Cost price
+            precioventa (str, optional): Sell price
+            tree (Any): Treeview object
+            lista_entry (list): List with all Entries
+        """
         self.clear_text(lista_entry)
         msg, frase = self.model.modificar(productid, stock, costo, precio)    
         if msg and frase:
@@ -57,7 +100,18 @@ class Vista():
             self.actualizar_treeview(tree)
 
 
-    def alta_producto(self, productid, stock, costo, precio, tree, lista_entry):
+    def alta_producto(self, productid:str, stock:int, costo:float, precio:float, tree:Any, lista_entry:list) -> None:
+        """
+        Clear Screen, call alta method of Model and show a message or update treeview depending of the case
+
+        Args:
+            producto (str, optional): Product id
+            stock (str, optional): Current stock
+            preciocosto (str, optional): Cost price
+            precioventa (str, optional): Sell price
+            tree (Any): Treeview object
+            lista_entry (list): List with all Entries
+        """
         self.clear_text(lista_entry)
         msg, frase = self.model.alta(productid, stock, costo, precio)    
         if msg and frase:
@@ -65,7 +119,16 @@ class Vista():
         else:
             self.actualizar_treeview(tree)
 
-    def baja_producto(self, productid, tree, lista_entry):
+    def baja_producto(self, productid:str, tree:Any, lista_entry:list) -> None:
+        """
+        Clear Screen, call baja method of Model and show a message or update treeview depending of the case
+
+        Args:
+            producto (str, optional): Product id
+            tree (Any): Treeview object
+            lista_entry (list): List with all Entries
+        """
+        
         self.clear_text(lista_entry)
         msg, frase = self.model.baja(productid)
         if msg == "Error":
@@ -78,12 +141,27 @@ class Vista():
                 self.actualizar_treeview(tree)
 
 
-    def consultar_producto(self, productid, tree, lista_entry):
+    def consultar_producto(self, productid:str, tree:Any, lista_entry:list) -> None:
+        """
+        Clear Screen, call consultar method of Model and show a message or update treeview depending of the case
+
+        Args:
+            producto (str, optional): Product id
+            tree (Any): Treeview object
+            lista_entry (list): List with all Entries
+        """
+
         self.clear_text(lista_entry)
         self.actualizar_treeview(tree, productid)
 
 
-    def vista_principal(self, root):
+    def vista_principal(self, root:Any) -> None:
+        """
+        App view building based on Tkinder library
+
+        Args:
+            root (Any): Tkinder object
+        """
         utils = Utils()
         e_producto_id = StringVar()
         e_stock = IntVar()
