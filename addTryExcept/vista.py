@@ -130,6 +130,11 @@ class Vista():
         """
         
         self.clear_text(lista_entry)
+        if tree.focus():
+            item = tree.focus()
+            item_details = tree.item(item)
+            productid = item_details['values'][0]
+
         msg, frase = self.model.baja(productid)
         if msg == "Error":
             self.message(msg, frase)
@@ -209,7 +214,6 @@ class Vista():
         e_precio_venta = ttk.Entry(root, textvariable=lab_precio_venta, width=13)
         lista_entry= [e_producto_id,e_stock,e_precio_costo,e_precio_venta]
 
-  
         bot_buscar = ttk.Button(root, text='Buscar Producto', command=lambda:self.consultar_producto(
                                                                                     e_producto_id.get(),
                                                                                     tree,
